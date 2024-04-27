@@ -1,13 +1,21 @@
 import { network, ethers, getNamedAccounts, deployments } from "hardhat";
 import { assert, expect } from "chai";
-import { ManagerMock, VatMock, VaultInfo } from "../../typechain-types";
+import {
+	DSProxy,
+	ManagerMock,
+	VatMock,
+	VaultInfo,
+} from "../../typechain-types";
 import {
 	CDP_ID,
+	MANAGER_ADDRESS,
+	VAT_ADDRESS,
 	VAULT_RESPONSE_EXAMPLE,
 	VatSetIlkParam,
 	ZERO_ADDRESS,
 	developmentChains,
 } from "../../utils/helper.config";
+import { ZeroAddress } from "ethers";
 
 console.log("unit test");
 const isDevelopmentChain = developmentChains.includes(network.name);
@@ -63,8 +71,6 @@ executeTest
 				it("Gets urn", async () => {
 					const ilk = VAULT_RESPONSE_EXAMPLE.ilk;
 					const urn = VAULT_RESPONSE_EXAMPLE.urn;
-					const collateral = VAULT_RESPONSE_EXAMPLE.collateral;
-					const debt = VAULT_RESPONSE_EXAMPLE.debt;
 					const urns = await vatMock.urns(ilk, urn);
 					assert.equal(urns.ink, BigInt(0));
 					assert.equal(urns.art, BigInt(0));
@@ -101,15 +107,58 @@ executeTest
 			});
 
 			describe("Constructor Tests", () => {
-				it("Example test", async () => {
-					assert.equal(1, 1);
+				it("Sets Manager and Vat correctly", async () => {
+					const managerRealAddr = await vault.manager();
+					const vatRealAddr = await vault.vat();
+					const managerExpectedAddr = await managerMock.getAddress();
+					const vatExpectedAddr = await vatMock.getAddress();
+					assert.equal(managerRealAddr, managerExpectedAddr);
+					assert.equal(vatRealAddr, vatExpectedAddr);
 				});
 			});
 
-			describe("Call CDP ID with debt rate", () => {
-				it("Example test", async () => {
-					// console.log(await vault.getCdpInfoWithDebtWithRate(31214));
-					// console.log(await vault.getCdpInfoWithDebtWithRate(31039));
+			describe("getCdpInfo", () => {
+				const { collateral, debt, ilk, owner, urn } = VAULT_RESPONSE_EXAMPLE;
+				const { art, dust, line, rate, spot } = VatSetIlkParam;
+
+				beforeEach(async () => {
+					await managerMock.setIlks(CDP_ID, ilk);
+					await managerMock.setOwners(CDP_ID, owner);
+					await managerMock.setUrns(CDP_ID, urn);
+					await vatMock.setUrn(ilk, urn, collateral, debt);
+					await vatMock.setIlk(
+						ilk,
+						BigInt(art),
+						BigInt(rate),
+						BigInt(spot),
+						BigInt(line),
+						BigInt(dust),
+					);
+				});
+
+				it("Returns CDP info", async () => {
+					const info = await vault.getCdpInfo(CDP_ID);
+					assert.equal(info.urn, urn);
+					assert.equal(info.owner, owner);
+					assert.equal(info.userAddr, ZeroAddress);
+					assert.equal(info.ilk, ilk);
+					assert.equal(info.collateral, BigInt(collateral));
+					assert.equal(info.debt, BigInt(debt));
+				});
+
+				it("Returns CDP info with debt rate", async () => {
+					const rateReal = (await vatMock.ilks(ilk)).rate;
+					const expectedDebtWithRate = (Number(debt) * Number(rate)) / 1e27;
+					const info = await vault.getCdpInfoWithDebtWithRate(CDP_ID);
+
+					assert.equal(rateReal, BigInt(rate));
+					assert.equal(info.urn, urn);
+					assert.equal(info.owner, owner);
+					assert.equal(info.userAddr, ZeroAddress);
+					assert.equal(info.ilk, ilk);
+					assert.equal(info.collateral, BigInt(collateral));
+					assert.equal(info.debt, BigInt(debt));
+					assert.equal(Number(info.debtWithRate), expectedDebtWithRate);
 				});
 			});
 		})
