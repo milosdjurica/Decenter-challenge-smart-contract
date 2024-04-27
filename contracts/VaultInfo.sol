@@ -98,8 +98,14 @@ abstract contract DSProxy {
 }
 
 contract VaultInfo is DSMath {
-    Manager manager = Manager(0x5ef30b9986345249bc32d8928B7ee64DE9435E39);
-    Vat vat = Vat(0x35D1b3F3D7966A1DFe207aa4514C12a259A0492B);
+    // Compiler 0.6.0 doesn't support immutable variables
+    Manager private manager;
+    Vat private vat;
+
+    constructor(address _managerAddress, address _vatAddress) public {
+        manager = Manager(_managerAddress);
+        vat = Vat(_vatAddress);
+    }
 
     function _getProxyOwner(address owner) external view returns (address userAddr) {
         DSProxy proxy = DSProxy(owner);

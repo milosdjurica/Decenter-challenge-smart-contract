@@ -26,11 +26,11 @@ const config: HardhatUserConfig = {
 		hardhat: {
 			chainId: 31337,
 
-			forking: {
-				url: MAINNET_RPC_URL,
-				blockNumber: 19746898,
-			},
-			allowUnlimitedContractSize: true,
+			// forking: {
+			// 	url: MAINNET_RPC_URL,
+			// 	blockNumber: 19746898,
+			// },
+			// allowUnlimitedContractSize: true,
 		},
 		// for working with yarn hardhat node !
 		localhost: {
