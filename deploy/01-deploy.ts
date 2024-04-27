@@ -2,17 +2,17 @@ import { DeployFunction } from "hardhat-deploy/types";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-	const { getNamedAccounts, ethers, deployments, network } = hre;
+	const { getNamedAccounts, deployments } = hre;
 	const { deployer } = await getNamedAccounts();
 	const { deploy, log } = deployments;
 
-	const example = await deploy("Example", {
+	const vault = await deploy("VaultInfo", {
 		from: deployer,
 		args: [], // ! constructor args
 		log: true,
 	});
 
-	log(`Example contract: `, example.address);
+	log(`VaultInfo contract: `, vault.address);
 };
 export default func;
 func.id = "deploy_example"; // id required to prevent re-execution

@@ -138,13 +138,13 @@ contract VaultInfo is DSMath {
         ilk = manager.ilks(_cdpId);
         urn = manager.urns(_cdpId);
         owner = manager.owns(_cdpId);
+        (, uint256 debtRate,,,) = vat.ilks(ilk);
         userAddr = address(0);
         try this._getProxyOwner(owner) returns (address user) {
             userAddr = user;
         } catch {}
 
         (collateral, debt) = vat.urns(ilk, urn);
-        uint256 rate = vat.ilks(ilk);
-        debtWithRate = debt * rate / 1e27;
+        debtWithRate = debt * debtRate / 1e27;
     }
 }
