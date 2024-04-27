@@ -1,13 +1,39 @@
-# Hardhat Project Template
+# Decenter challenge - Milos Djurica
 
-This project is created for faster starting when you are creating new Hardhat project. 
+### Steps to run code on your machine -> 
 
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
+1. Clone repository
 ```
+git clone https://github.com/milosdjurica/Decenter-challenge-smart-contract
+```
+
+
+2. Install dependencies
+```
+yarn
+```
+
+3. Create .env file and add your MAINNET_RPC_URL
+
+
+
+4. Run tests on hardhat local network
+```
+yarn hardhat test
+```
+
+5. Run tests on forked mainnet
+    1. In hardhat.config.ts uncomment -> 	
+        ```
+        // forking: {
+        // 	url: MAINNET_RPC_URL,
+        // 	blockNumber: 19746898,
+        // },
+        ```
+
+    2. Run command : 
+    ```
+    yarn hardhat test
+    ```
+
+

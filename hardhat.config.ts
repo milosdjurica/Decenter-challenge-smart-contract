@@ -5,9 +5,7 @@ import "dotenv/config";
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 
-const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL || "";
 const MAINNET_RPC_URL = process.env.MAINNET_RPC_URL || "";
-const PRIVATE_KEY = process.env.PRIVATE_KEY || "0xKEY";
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "api-key";
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "api-key";
 
@@ -26,23 +24,11 @@ const config: HardhatUserConfig = {
 		hardhat: {
 			chainId: 31337,
 
+			// ! Uncomment this to run on forked mainnet
 			// forking: {
 			// 	url: MAINNET_RPC_URL,
 			// 	blockNumber: 19746898,
 			// },
-		},
-		localhost: {
-			chainId: 1337,
-			url: "http://127.0.0.1:7545",
-		},
-		ganache: {
-			chainId: 1337,
-			url: "http://127.0.0.1:7545",
-		},
-		sepolia: {
-			chainId: 11155111,
-			url: SEPOLIA_RPC_URL,
-			accounts: [PRIVATE_KEY],
 		},
 	},
 	namedAccounts: {
