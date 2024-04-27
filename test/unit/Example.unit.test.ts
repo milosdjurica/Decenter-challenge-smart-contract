@@ -1,12 +1,10 @@
 import { network, ethers, getNamedAccounts, deployments } from "hardhat";
-import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { ManagerMock, VatMock, VaultInfo } from "../../typechain-types";
 import {
 	CDP_ID,
-	ILK,
-	URN,
 	VAULT_RESPONSE_EXAMPLE,
+	VatSetIlkParam,
 	ZERO_ADDRESS,
 	developmentChains,
 } from "../../utils/helper.config";
@@ -30,7 +28,7 @@ executeTest
 			});
 
 			describe("managerMockTests", () => {
-				it("getters", async () => {
+				it("returns zero values if not set up", async () => {
 					const ilks = await managerMock.ilks(CDP_ID);
 					const urns = await managerMock.ilks(CDP_ID);
 					const owners = await managerMock.ilks(CDP_ID);
@@ -63,8 +61,42 @@ executeTest
 
 			describe("vatMockTests", () => {
 				it("Gets urn", async () => {
-					const urns = await vatMock.urns(ILK, URN);
-					console.log("urns", urns);
+					const ilk = VAULT_RESPONSE_EXAMPLE.ilk;
+					const urn = VAULT_RESPONSE_EXAMPLE.urn;
+					const collateral = VAULT_RESPONSE_EXAMPLE.collateral;
+					const debt = VAULT_RESPONSE_EXAMPLE.debt;
+					const urns = await vatMock.urns(ilk, urn);
+					assert.equal(urns.ink, BigInt(0));
+					assert.equal(urns.art, BigInt(0));
+				});
+
+				it("Sets ilk", async () => {
+					const { art, dust, ilk, line, rate, spot } = VatSetIlkParam;
+					await vatMock.setIlk(
+						ilk,
+						BigInt(art),
+						BigInt(rate),
+						BigInt(spot),
+						BigInt(line),
+						BigInt(dust),
+					);
+					const ilksResponse = await vatMock.ilks(ilk);
+					assert.equal(ilksResponse.Art, BigInt(art));
+					assert.equal(ilksResponse.rate, BigInt(rate));
+					assert.equal(ilksResponse.spot, BigInt(spot));
+					assert.equal(ilksResponse.line, BigInt(line));
+					assert.equal(ilksResponse.dust, BigInt(dust));
+				});
+
+				it("Sets urns", async () => {
+					const ilk = VAULT_RESPONSE_EXAMPLE.ilk;
+					const urn = VAULT_RESPONSE_EXAMPLE.urn;
+					const collateral = VAULT_RESPONSE_EXAMPLE.collateral;
+					const debt = VAULT_RESPONSE_EXAMPLE.debt;
+					await vatMock.setUrn(ilk, urn, collateral, debt);
+					const urnsResponse = await vatMock.urns(ilk, urn);
+					assert.equal(urnsResponse.ink, BigInt(collateral));
+					assert.equal(urnsResponse.art, BigInt(debt));
 				});
 			});
 

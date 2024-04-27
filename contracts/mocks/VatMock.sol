@@ -20,8 +20,8 @@ contract VatMock {
     mapping(bytes32 => mapping(address => Urn)) public urns;
     mapping(bytes32 => Ilk) public ilks;
 
-    function setUrn(bytes32 _ilk, address _account, uint256 _ink, uint256 _art) external {
-        urns[_ilk][_account] = Urn(_ink, _art);
+    function setUrn(bytes32 _ilk, address _urn, uint256 _ink, uint256 _art) external {
+        urns[_ilk][_urn] = Urn(_ink, _art);
     }
 
     function setIlk(bytes32 _ilk, uint256 _art, uint256 _rate, uint256 _spot, uint256 _line, uint256 _dust) external {

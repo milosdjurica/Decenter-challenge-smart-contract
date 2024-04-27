@@ -6,3 +6,12 @@ export type VaultResponseType = {
 	collateral: string;
 	debt: string;
 };
+
+export type VatSetIlkParamType = {
+	ilk: string;
+	art: string;
+	rate: string;
+	spot: string;
+	line: string;
+	dust: string;
+};
