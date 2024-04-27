@@ -13,7 +13,7 @@ const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "api-key";
 
 const config: HardhatUserConfig = {
 	solidity: {
-		compilers: [{ version: "0.8.20" }, { version: "0.6.0" }],
+		compilers: [{ version: "0.6.0" }],
 		settings: {
 			optimizer: {
 				enabled: true,
@@ -26,23 +26,18 @@ const config: HardhatUserConfig = {
 		hardhat: {
 			chainId: 31337,
 
-			forking: {
-				url: MAINNET_RPC_URL,
-				blockNumber: 19746898,
-			},
-			allowUnlimitedContractSize: true,
+			// forking: {
+			// 	url: MAINNET_RPC_URL,
+			// 	blockNumber: 19746898,
+			// },
 		},
-		// for working with yarn hardhat node !
 		localhost: {
-			chainId: 31337,
-			url: "http://127.0.0.1:8545",
-			// allowUnlimitedContractSize: true,
-			// automatically gets 10 default accounts
+			chainId: 1337,
+			url: "http://127.0.0.1:7545",
 		},
 		ganache: {
 			chainId: 1337,
-			url: "http://127.0.0.1:8545",
-			// allowUnlimitedContractSize: true,
+			url: "http://127.0.0.1:7545",
 		},
 		sepolia: {
 			chainId: 11155111,
@@ -62,7 +57,6 @@ const config: HardhatUserConfig = {
 		apiKey: {
 			// mainnet: ETHERSCAN_API_KEY,
 			sepolia: ETHERSCAN_API_KEY,
-			// polygon: POLYGONSCAN_API_KEY,
 		},
 	},
 	gasReporter: {
@@ -73,7 +67,6 @@ const config: HardhatUserConfig = {
 		currency: "USD",
 		excludeContracts: [],
 		coinmarketcap: COINMARKETCAP_API_KEY,
-		// token: "MATIC", // polygon network
 	},
 	mocha: {
 		timeout: 500000, //500 seconds
