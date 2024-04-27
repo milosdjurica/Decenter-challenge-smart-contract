@@ -10,7 +10,7 @@ export type VaultResponseType = {
 };
 
 export type VaultResponseTypeWithDebtRate = VaultResponseType & {
-	debtRate: bigint;
+	debtWithRate: bigint;
 };
 
 export type VatSetIlkParamType = {

@@ -4,6 +4,7 @@ import "dotenv/config";
 
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
+import { BLOCK_NUMBER } from "./utils/helper.config";
 
 const MAINNET_RPC_URL = process.env.MAINNET_RPC_URL || "";
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "api-key";
@@ -27,7 +28,7 @@ const config: HardhatUserConfig = {
 			// ! Uncomment this to run on forked mainnet
 			// forking: {
 			// 	url: MAINNET_RPC_URL,
-			// 	blockNumber: 19746898,
+			// 	blockNumber: BLOCK_NUMBER,
 			// },
 		},
 	},

@@ -16,7 +16,7 @@ const IS_FORKED_NETWORK = "forking" in network.config;
 const executeTest = isDevelopmentChain && !IS_FORKED_NETWORK;
 
 executeTest
-	? describe("Example Unit Tests", () => {
+	? describe("Unit Tests", () => {
 			let vault: VaultInfo;
 			let vatMock: VatMock;
 			let managerMock: ManagerMock;
