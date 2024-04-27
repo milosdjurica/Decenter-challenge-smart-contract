@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 
-import {Manager} from "./VaultInfo.sol";
+import {Manager} from "../VaultInfo.sol";
 
 contract ManagerMock is Manager {
     mapping(uint256 => bytes32) private s_ilks;
