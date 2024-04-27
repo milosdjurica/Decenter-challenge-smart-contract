@@ -121,4 +121,30 @@ contract VaultInfo is DSMath {
 
         (collateral, debt) = vat.urns(ilk, urn);
     }
+
+    function getCdpInfoWithDebtWithRate(uint256 _cdpId)
+        external
+        view
+        returns (
+            address urn,
+            address owner,
+            address userAddr,
+            bytes32 ilk,
+            uint256 collateral,
+            uint256 debt,
+            uint256 debtWithRate
+        )
+    {
+        ilk = manager.ilks(_cdpId);
+        urn = manager.urns(_cdpId);
+        owner = manager.owns(_cdpId);
+        userAddr = address(0);
+        try this._getProxyOwner(owner) returns (address user) {
+            userAddr = user;
+        } catch {}
+
+        (collateral, debt) = vat.urns(ilk, urn);
+        uint256 rate = vat.ilks(ilk);
+        debtWithRate = debt * rate / 1e27;
+    }
 }
