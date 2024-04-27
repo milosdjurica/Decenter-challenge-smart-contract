@@ -26,7 +26,7 @@ yarn hardhat test
         ```
         // forking: {
         // 	url: MAINNET_RPC_URL,
-        // 	blockNumber: 19746898,
+        // 	blockNumber: BLOCK_NUMBER,
         // },
         ```
 

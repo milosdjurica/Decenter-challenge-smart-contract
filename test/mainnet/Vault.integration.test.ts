@@ -32,8 +32,22 @@ executeTest
 				});
 			});
 
+			describe("Call CDP ID", () => {
+				it("Gets CDP info", async () => {
+					const { collateral, debt, ilk, owner, urn, userAddr } =
+						VaultMainnetExample;
+					const cdpInfo = await vault.getCdpInfo(31214);
+					assert.equal(cdpInfo.urn, urn);
+					assert.equal(cdpInfo.owner, owner);
+					assert.equal(cdpInfo.userAddr, userAddr);
+					assert.equal(cdpInfo.ilk, ilk);
+					assert.equal(cdpInfo.collateral, collateral);
+					assert.equal(cdpInfo.debt, debt);
+				});
+			});
+
 			describe("Call CDP ID with debt rate", () => {
-				it("Example test", async () => {
+				it("Gets CDP info with debt with rate", async () => {
 					const { collateral, debt, debtWithRate, ilk, owner, urn, userAddr } =
 						VaultMainnetExample;
 					const cdpInfo = await vault.getCdpInfoWithDebtWithRate(31214);
