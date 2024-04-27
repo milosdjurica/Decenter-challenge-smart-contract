@@ -99,8 +99,8 @@ abstract contract DSProxy {
 
 contract VaultInfo is DSMath {
     // Compiler 0.6.0 doesn't support immutable variables
-    Manager private manager;
-    Vat private vat;
+    Manager public manager;
+    Vat public vat;
 
     constructor(address _managerAddress, address _vatAddress) public {
         manager = Manager(_managerAddress);
@@ -151,6 +151,6 @@ contract VaultInfo is DSMath {
         } catch {}
 
         (collateral, debt) = vat.urns(ilk, urn);
-        debtWithRate = debt * debtRate / 1e27;
+        debtWithRate = rdiv(rmul(debt, debtRate), 1e27);
     }
 }
