@@ -2,16 +2,14 @@ import { network, ethers, getNamedAccounts, deployments } from "hardhat";
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { VaultInfo } from "../../typechain-types";
-import { developmentChains } from "../../utils/helper.config";
 
-const isMainnetFork = network.name === "forkedMainnet";
-console.log("integration test");
+const IS_FORKED_NETWORK = "forking" in network.config;
+const executeTest = IS_FORKED_NETWORK;
 
-!isMainnetFork
-	? describe.skip
-	: describe("Mainnet Tests", () => {
-			const CHAIN_ID = network.config.chainId;
-			console.log("CHAIN_ID", CHAIN_ID);
+console.log("Integration test");
+
+executeTest
+	? describe("Mainnet Tests", () => {
 			let vault: VaultInfo;
 
 			beforeEach(async () => {
@@ -31,4 +29,5 @@ console.log("integration test");
 					console.log(await vault.getCdpInfoWithDebtWithRate(31039));
 				});
 			});
-		});
+		})
+	: describe.skip;

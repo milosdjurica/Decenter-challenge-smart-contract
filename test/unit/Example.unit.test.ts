@@ -4,14 +4,13 @@ import { assert, expect } from "chai";
 import { VaultInfo } from "../../typechain-types";
 import { developmentChains } from "../../utils/helper.config";
 
-const isDevelopmentChain = developmentChains.includes(network.name);
 console.log("unit test");
+const isDevelopmentChain = developmentChains.includes(network.name);
+const IS_FORKED_NETWORK = "forking" in network.config;
+const executeTest = isDevelopmentChain && !IS_FORKED_NETWORK;
 
-!isDevelopmentChain
-	? describe.skip
-	: describe("Example Unit Tests", () => {
-			const CHAIN_ID = network.config.chainId;
-			console.log("CHAIN_ID", CHAIN_ID);
+executeTest
+	? describe("Example Unit Tests", () => {
 			let vault: VaultInfo;
 			beforeEach(async () => {
 				await deployments.fixture(["all"]);
@@ -30,4 +29,5 @@ console.log("unit test");
 					console.log(await vault.getCdpInfoWithDebtWithRate(31039));
 				});
 			});
-		});
+		})
+	: describe.skip;
