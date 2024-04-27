@@ -8,17 +8,17 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 	const { deploy, log } = deployments;
 
 	const IS_DEV_CHAIN = developmentChains.includes(network.name);
-	console.log("network.name", network.name);
+	const IS_FORKED_NETWORK = "forking" in network.config;
 
 	let vatAddress;
 	let managerAddress;
 
-	if (IS_DEV_CHAIN) {
-		vatAddress = (await deployments.get("VatMock")).address;
-		managerAddress = (await deployments.get("ManagerMock")).address;
-	} else {
+	if (IS_FORKED_NETWORK) {
 		vatAddress = "0x35D1b3F3D7966A1DFe207aa4514C12a259A0492B";
 		managerAddress = "0x5ef30b9986345249bc32d8928B7ee64DE9435E39";
+	} else if (IS_DEV_CHAIN) {
+		vatAddress = (await deployments.get("VatMock")).address;
+		managerAddress = (await deployments.get("ManagerMock")).address;
 	}
 
 	const vault = await deploy("VaultInfo", {
