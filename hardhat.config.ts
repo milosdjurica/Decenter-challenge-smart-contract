@@ -9,13 +9,11 @@ const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL || "";
 const MAINNET_RPC_URL = process.env.MAINNET_RPC_URL || "";
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "0xKEY";
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "api-key";
-const POLYGONSCAN_API_KEY =
-	process.env.POLYGONSCAN_API_KEY || "polygon-api-key";
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "api-key";
 
 const config: HardhatUserConfig = {
 	solidity: {
-		compilers: [{ version: "0.8.20" }],
+		compilers: [{ version: "0.8.20" }, { version: "0.6.0" }],
 		settings: {
 			optimizer: {
 				enabled: true,
