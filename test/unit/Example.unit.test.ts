@@ -1,15 +1,8 @@
 import { network, ethers, getNamedAccounts, deployments } from "hardhat";
 import { assert, expect } from "chai";
-import {
-	DSProxy,
-	ManagerMock,
-	VatMock,
-	VaultInfo,
-} from "../../typechain-types";
+import { ManagerMock, VatMock, VaultInfo } from "../../typechain-types";
 import {
 	CDP_ID,
-	MANAGER_ADDRESS,
-	VAT_ADDRESS,
 	VAULT_RESPONSE_EXAMPLE,
 	VatSetIlkParam,
 	ZERO_ADDRESS,
@@ -78,20 +71,13 @@ executeTest
 
 				it("Sets ilk", async () => {
 					const { art, dust, ilk, line, rate, spot } = VatSetIlkParam;
-					await vatMock.setIlk(
-						ilk,
-						BigInt(art),
-						BigInt(rate),
-						BigInt(spot),
-						BigInt(line),
-						BigInt(dust),
-					);
+					await vatMock.setIlk(ilk, art, rate, spot, line, dust);
 					const ilksResponse = await vatMock.ilks(ilk);
-					assert.equal(ilksResponse.Art, BigInt(art));
-					assert.equal(ilksResponse.rate, BigInt(rate));
-					assert.equal(ilksResponse.spot, BigInt(spot));
-					assert.equal(ilksResponse.line, BigInt(line));
-					assert.equal(ilksResponse.dust, BigInt(dust));
+					assert.equal(ilksResponse.Art, art);
+					assert.equal(ilksResponse.rate, rate);
+					assert.equal(ilksResponse.spot, spot);
+					assert.equal(ilksResponse.line, line);
+					assert.equal(ilksResponse.dust, dust);
 				});
 
 				it("Sets urns", async () => {
@@ -101,8 +87,8 @@ executeTest
 					const debt = VAULT_RESPONSE_EXAMPLE.debt;
 					await vatMock.setUrn(ilk, urn, collateral, debt);
 					const urnsResponse = await vatMock.urns(ilk, urn);
-					assert.equal(urnsResponse.ink, BigInt(collateral));
-					assert.equal(urnsResponse.art, BigInt(debt));
+					assert.equal(urnsResponse.ink, collateral);
+					assert.equal(urnsResponse.art, debt);
 				});
 			});
 
@@ -126,14 +112,7 @@ executeTest
 					await managerMock.setOwners(CDP_ID, owner);
 					await managerMock.setUrns(CDP_ID, urn);
 					await vatMock.setUrn(ilk, urn, collateral, debt);
-					await vatMock.setIlk(
-						ilk,
-						BigInt(art),
-						BigInt(rate),
-						BigInt(spot),
-						BigInt(line),
-						BigInt(dust),
-					);
+					await vatMock.setIlk(ilk, art, rate, spot, line, dust);
 				});
 
 				it("Returns CDP info", async () => {
@@ -142,8 +121,8 @@ executeTest
 					assert.equal(info.owner, owner);
 					assert.equal(info.userAddr, ZeroAddress);
 					assert.equal(info.ilk, ilk);
-					assert.equal(info.collateral, BigInt(collateral));
-					assert.equal(info.debt, BigInt(debt));
+					assert.equal(info.collateral, collateral);
+					assert.equal(info.debt, debt);
 				});
 
 				it("Returns CDP info with debt rate", async () => {
@@ -151,13 +130,13 @@ executeTest
 					const expectedDebtWithRate = (Number(debt) * Number(rate)) / 1e27;
 					const info = await vault.getCdpInfoWithDebtWithRate(CDP_ID);
 
-					assert.equal(rateReal, BigInt(rate));
+					assert.equal(rateReal, rate);
 					assert.equal(info.urn, urn);
 					assert.equal(info.owner, owner);
 					assert.equal(info.userAddr, ZeroAddress);
 					assert.equal(info.ilk, ilk);
-					assert.equal(info.collateral, BigInt(collateral));
-					assert.equal(info.debt, BigInt(debt));
+					assert.equal(info.collateral, collateral);
+					assert.equal(info.debt, debt);
 					assert.equal(Number(info.debtWithRate), expectedDebtWithRate);
 				});
 			});

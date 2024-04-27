@@ -16,7 +16,6 @@ yarn
 3. Create .env file and add your MAINNET_RPC_URL
 
 
-
 4. Run tests on hardhat local network
 ```
 yarn hardhat test

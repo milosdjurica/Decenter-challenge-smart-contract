@@ -2,6 +2,7 @@ import { network, ethers, getNamedAccounts, deployments } from "hardhat";
 import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { VaultInfo } from "../../typechain-types";
+import { MANAGER_ADDRESS, VAT_ADDRESS } from "../../utils/helper.config";
 
 const IS_FORKED_NETWORK = "forking" in network.config;
 const executeTest = IS_FORKED_NETWORK;
@@ -18,8 +19,12 @@ executeTest
 			});
 
 			describe("Constructor Tests", () => {
-				it("Example test", async () => {
-					assert.equal(1, 1);
+				it("Constructor test", async () => {
+					const realManager = await vault.manager();
+					const realVat = await vault.vat();
+
+					assert.equal(realManager, MANAGER_ADDRESS);
+					assert.equal(realVat, VAT_ADDRESS);
 				});
 			});
 
